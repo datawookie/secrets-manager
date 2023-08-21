@@ -6,9 +6,16 @@ The Secrets Manager Python client enables retrieving of secrets for Python appli
 
 ### Usage
 
-Using the client consists of the following steps:
+1. Set up the following environment variables:
 
-1. Instantiating the required client properties, `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variable or `AWS_PROFILE`.
+```bash
+export AWS_PROFILE=
+export AWS_DEFAULT_REGION=
+# The name of the secret in Secrets Manager.
+export AWS_SECRET_ID=
+```
+
+2. Retrieve values for specific keys.
 
 ```python
 from secrets_manager import get_secret
