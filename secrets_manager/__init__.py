@@ -5,7 +5,6 @@ import json
 import os
 
 from aws_secretsmanager_caching import SecretCache, SecretCacheConfig
-from secrets_manager.client import get_secret, get_aws_secret, get_env_secret
 from cachetools import func
 
 
