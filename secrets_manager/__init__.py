@@ -15,7 +15,6 @@ logger = logging.getLogger(__name__)
 
 # @func.ttl_cache(ttl=60*60)
 def _get_secrets_manager_client():
-    logger.debug("Create Secrets Manager client.")
     client = boto3.client('secretsmanager')
     # cache_config = SecretCacheConfig(secret_refresh_interval=60*60)
     # return SecretCache(config=cache_config, client=client)
@@ -36,6 +35,7 @@ def get_secret_value(name):
     return client.get_secret_value(SecretId=name)
 
 def get_secret_dict(name):
+    logger.debug(f"Get secret dictionary for '{name}'.")
     secret = get_secret_value(name)
     return json.loads(secret["SecretString"])
 
