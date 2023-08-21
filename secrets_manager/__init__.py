@@ -10,6 +10,39 @@ from cachetools import func
 
 logger = logging.getLogger(__name__)
 
+# CLIENT ------------------------------------------------------------------------------------------
+
+
+# @func.ttl_cache(ttl=60*60)
+def _get_secrets_manager_client():
+    logger.debug("Create Secrets Manager client.")
+    client = boto3.client('secretsmanager')
+    # cache_config = SecretCacheConfig(secret_refresh_interval=60*60)
+    # return SecretCache(config=cache_config, client=client)
+    return client
+
+# FUNCTIONS ---------------------------------------------------------------------------------------
+
+def list_secrets():
+    client = _get_secrets_manager_client()
+    return client.list_secrets()
+
+def describe_secret(name):
+    client = _get_secrets_manager_client()
+    return client.describe_secret(SecretId=name)
+
+def get_secret_value(name):
+    client = _get_secrets_manager_client()
+    return client.get_secret_value(SecretId=name)
+
+def get_secret_dict(name):
+    secret = get_secret_value(name)
+    return json.loads(secret["SecretString"])
+
+def get_secret_key(name, key):
+    return get_secret_dict(name)[key]
+
+# -------------------------------------------------------------------------------------------------
 
 class Secret:
 
@@ -52,8 +85,11 @@ class Secret:
 
 
 def get_secret(
-        name: str, source: str = 'aws', key: str = None,
-        type: str = 'string', default: object = None,
+        name: str,
+        source: str = 'aws',
+        key: str = None,
+        type: str = 'string',
+        default: object = None,
         raises: bool = False):
     return Secret(name, source, key, type, default, raises)
 
@@ -93,10 +129,3 @@ def get_env_secret(
 
     decoded = json.loads(secret)
     return decoded
-
-
-@func.ttl_cache(ttl=60*60)
-def _get_secrets_manager_client():
-    client = boto3.client('secretsmanager')
-    cache_config = SecretCacheConfig(secret_refresh_interval=60*60)
-    return SecretCache(config=cache_config, client=client)
