@@ -18,13 +18,21 @@ export AWS_SECRET_ID=
 2. Retrieve values for specific keys.
 
 ```python
-from secrets_manager import get_secret
-
-# Get binary secrets such as SSH keys using the AWS source
-secret = get_secret(name='api', key='SSH_KEY', type='binary')
+from secrets_manager import *
 
 # Get secrets from AWS and fallback to environmental variables if not found
 secret = get_secret(name='www', key='API_KEY').or_default(name='API_KEY', source='env')
 
 # Get specific key from a JSON decoded secret
 secret = get_secret(name='api', key='DB_PASSWORD')
+
+get_secret(name='api', key='DB_PASSWORD').get()
+
+describe_secret("api")
+
+get_secret_value("api")
+
+get_secret_dict("api")
+
+get_secret_key("api", "DB_HOST")
+```
