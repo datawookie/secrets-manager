@@ -1,5 +1,4 @@
 import logging
-import base64
 import boto3
 import json
 import os
@@ -12,13 +11,12 @@ logger = logging.getLogger(__name__)
 
 # CLIENT ------------------------------------------------------------------------------------------
 
+CACHE_CONFIG = SecretCacheConfig(secret_refresh_interval=60*60)
 
 # @func.ttl_cache(ttl=60*60)
 def _get_secrets_manager_client():
     client = boto3.client('secretsmanager')
-    # cache_config = SecretCacheConfig(secret_refresh_interval=60*60)
-    # return SecretCache(config=cache_config, client=client)
-    return client
+    return SecretCache(config=CACHE_CONFIG, client=client)
 
 # FUNCTIONS ---------------------------------------------------------------------------------------
 
@@ -38,6 +36,25 @@ def get_secret_dict(name):
     logger.debug(f"Get secret dictionary for '{name}'.")
     secret = get_secret_value(name)
     return json.loads(secret["SecretString"])
+
+def get_aws_secret(name: str, key: str = None):
+    client = _get_secrets_manager_client()
+
+    secret = client.get_secret_string(name)
+    if not key:
+        return secret
+
+    decoded = json.loads(secret)
+    return decoded[key]
+
+def get_env_secret(name: str, key: str = None):
+    secret = os.environ[name]
+
+    if not key:
+        return secret
+
+    decoded = json.loads(secret)
+    return decoded
 
 def get_secret_key(name, key):
     return get_secret_dict(name)[key]
@@ -98,34 +115,3 @@ def secrets_manager_factory(source: str):
     if source == 'aws':
         return get_aws_secret
     return get_env_secret
-
-
-def get_aws_secret(
-        name: str, key: str = None, type: str = 'string'):
-    client = _get_secrets_manager_client()
-
-    if type == 'binary':
-        assert key is None, 'key argument not supported'
-        secret = client.get_secret_binary(name)
-        return base64.b64decode(secret)
-
-    secret = client.get_secret_string(name)
-    if not key:
-        return secret
-
-    decoded = json.loads(secret)
-    return decoded[key]
-
-
-def get_env_secret(
-        name: str, key: str = None, type: str = 'string'):
-    secret = os.environ[name]
-    if type == 'binary':
-        assert key is None, 'key argument not supported'
-        return base64.b64decode(secret)
-
-    if not key:
-        return secret
-
-    decoded = json.loads(secret)
-    return decoded
