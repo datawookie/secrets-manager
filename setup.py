@@ -20,8 +20,7 @@ setup(
     url='https://github.com/datawookie/secrets-manager',
     install_requires=[
         'boto3',
-        'aws-secretsmanager-caching',
-        'cachetools'
+        'aws-secretsmanager-caching'
     ],
     include_package_data=True
 )

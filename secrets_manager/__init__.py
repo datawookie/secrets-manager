@@ -4,7 +4,6 @@ import json
 import os
 
 from aws_secretsmanager_caching import SecretCache, SecretCacheConfig
-from cachetools import func
 
 
 logger = logging.getLogger(__name__)
@@ -13,7 +12,6 @@ logger = logging.getLogger(__name__)
 
 CACHE_CONFIG = SecretCacheConfig(secret_refresh_interval=60*60)
 
-# @func.ttl_cache(ttl=60*60)
 def _get_secrets_manager_client():
     client = boto3.client('secretsmanager')
     return SecretCache(config=CACHE_CONFIG, client=client)
