@@ -10,7 +10,8 @@ logger = logging.getLogger(__name__)
 
 # CLIENT ------------------------------------------------------------------------------------------
 
-CACHE_CONFIG = SecretCacheConfig(secret_refresh_interval=60*60)
+CACHE_CONFIG = SecretCacheConfig(secret_refresh_interval=60 * 60)
+
 
 def _get_secrets_manager_client():
     client = boto3.client('secretsmanager')
@@ -18,22 +19,27 @@ def _get_secrets_manager_client():
 
 # FUNCTIONS ---------------------------------------------------------------------------------------
 
+
 def list_secrets():
     client = _get_secrets_manager_client()
     return client.list_secrets()
+
 
 def describe_secret(name):
     client = _get_secrets_manager_client()
     return client.describe_secret(SecretId=name)
 
+
 def get_secret_value(name):
     client = _get_secrets_manager_client()
     return client.get_secret_value(SecretId=name)
+
 
 def get_secret_dict(name):
     logger.debug(f"Get secret dictionary for '{name}'.")
     secret = get_secret_value(name)
     return json.loads(secret["SecretString"])
+
 
 def get_aws_secret(name: str, key: str = None):
     client = _get_secrets_manager_client()
@@ -45,6 +51,7 @@ def get_aws_secret(name: str, key: str = None):
     decoded = json.loads(secret)
     return decoded[key]
 
+
 def get_env_secret(name: str, key: str = None):
     secret = os.environ[name]
 
@@ -54,13 +61,14 @@ def get_env_secret(name: str, key: str = None):
     decoded = json.loads(secret)
     return decoded
 
+
 def get_secret_key(name, key):
     return get_secret_dict(name)[key]
 
 # -------------------------------------------------------------------------------------------------
 
-class Secret:
 
+class Secret:
     def __init__(
             self,
             name: str,
