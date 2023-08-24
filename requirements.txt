@@ -1,4 +1,5 @@
 boto3==1.26.144
+bump2version==1.0.1
 aws-secretsmanager-caching==1.1.1.5
 twine==4.0.2
 pytest==7.4.0
