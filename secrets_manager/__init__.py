@@ -20,38 +20,6 @@ def _get_secrets_manager_client():
 # FUNCTIONS ---------------------------------------------------------------------------------------
 
 
-# def list_secrets():
-#     client = _get_secrets_manager_client()
-#     return client.list_secrets()
-
-
-# def describe_secret(name):
-#     client = _get_secrets_manager_client()
-#     return client.describe_secret(SecretId=name)
-
-
-# def get_secret_value(name):
-#     client = _get_secrets_manager_client()
-#     return client.get_secret_value(SecretId=name)
-
-
-# def get_secret_dict(name):
-#     logger.debug(f"Get secret dictionary for '{name}'.")
-#     secret = get_secret_value(name)
-#     return json.loads(secret["SecretString"])
-
-
-# def get_secret_xxx(name):
-#     client = _get_secrets_manager_client()
-#     logger.debug(f"Get secret string for '{name}'.")
-#     secret = client.get_secret_string(name)
-#     return json.loads(secret["SecretString"])
-
-
-# def get_secret_key(name, key):
-#     return get_secret_dict(name)[key]
-
-
 def get_secret(name: str, key: str = None):
     client = _get_secrets_manager_client()
 
@@ -62,6 +30,7 @@ def get_secret(name: str, key: str = None):
         return secret[key]
     else:
         return secret
+
 
 # -------------------------------------------------------------------------------------------------
 
@@ -103,16 +72,6 @@ class Secret:
             raises: bool = False):
         return self if self.get() else Secret(
             name, source, key, type, default, raises)
-
-
-def get_secret(
-        name: str,
-        source: str = 'aws',
-        key: str = None,
-        type: str = 'string',
-        default: object = None,
-        raises: bool = False):
-    return Secret(name, source, key, type, default, raises)
 
 
 def secrets_manager_factory(source: str):
