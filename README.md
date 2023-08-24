@@ -20,7 +20,7 @@ export AWS_SECRET_ID=
 ```python
 from secrets_manager import *
 
-# Get secrets from AWS and fallback to environmental variables if not found
+# Get secrets from AWS and fallback to environment variable if not found.
 secret = get_secret(name='www', key='API_KEY').or_default(name='API_KEY', source='env')
 
 # Get specific key from a JSON decoded secret

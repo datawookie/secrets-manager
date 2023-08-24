@@ -20,50 +20,48 @@ def _get_secrets_manager_client():
 # FUNCTIONS ---------------------------------------------------------------------------------------
 
 
-def list_secrets():
-    client = _get_secrets_manager_client()
-    return client.list_secrets()
+# def list_secrets():
+#     client = _get_secrets_manager_client()
+#     return client.list_secrets()
 
 
-def describe_secret(name):
-    client = _get_secrets_manager_client()
-    return client.describe_secret(SecretId=name)
+# def describe_secret(name):
+#     client = _get_secrets_manager_client()
+#     return client.describe_secret(SecretId=name)
 
 
-def get_secret_value(name):
-    client = _get_secrets_manager_client()
-    return client.get_secret_value(SecretId=name)
+# def get_secret_value(name):
+#     client = _get_secrets_manager_client()
+#     return client.get_secret_value(SecretId=name)
 
 
-def get_secret_dict(name):
-    logger.debug(f"Get secret dictionary for '{name}'.")
-    secret = get_secret_value(name)
-    return json.loads(secret["SecretString"])
+# def get_secret_dict(name):
+#     logger.debug(f"Get secret dictionary for '{name}'.")
+#     secret = get_secret_value(name)
+#     return json.loads(secret["SecretString"])
 
 
-def get_aws_secret(name: str, key: str = None):
+# def get_secret_xxx(name):
+#     client = _get_secrets_manager_client()
+#     logger.debug(f"Get secret string for '{name}'.")
+#     secret = client.get_secret_string(name)
+#     return json.loads(secret["SecretString"])
+
+
+# def get_secret_key(name, key):
+#     return get_secret_dict(name)[key]
+
+
+def get_secret(name: str, key: str = None):
     client = _get_secrets_manager_client()
 
     secret = client.get_secret_string(name)
-    if not key:
+    secret = json.loads(secret)
+
+    if key:
+        return secret[key]
+    else:
         return secret
-
-    decoded = json.loads(secret)
-    return decoded[key]
-
-
-def get_env_secret(name: str, key: str = None):
-    secret = os.environ[name]
-
-    if not key:
-        return secret
-
-    decoded = json.loads(secret)
-    return decoded
-
-
-def get_secret_key(name, key):
-    return get_secret_dict(name)[key]
 
 # -------------------------------------------------------------------------------------------------
 
