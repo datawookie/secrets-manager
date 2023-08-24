@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name='secrets_manager',
-    version='0.0.2',
+    version='0.0.3',
     description='AWS Secrets Manager Python client',
     long_description=readme(),
     classifiers=[
