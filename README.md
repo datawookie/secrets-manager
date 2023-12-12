@@ -36,3 +36,21 @@ get_secret_dict("api")
 
 get_secret_key("api", "DB_HOST")
 ```
+
+## Development
+
+### Versions
+
+Update the version. Something like:
+
+```
+bump2version patch
+```
+
+Push changes.
+
+Push new tags.
+
+```
+git push origin --tags
+```
